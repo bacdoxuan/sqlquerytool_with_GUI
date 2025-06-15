@@ -1,0 +1,14 @@
+﻿{
+    "db_files":  [
+                     "E:\\sqlquerytool\\databases\\database1.db3",
+                     "E:\\sqlquerytool\\databases\\database2.db3"
+                 ],
+    "mapping_file":  "E:\\sqlquerytool\\config\\sql_to_db_mapping.json",
+    "sql_files":  [
+                      "E:\\sqlquerytool\\sql_queries\\sql1.sql",
+                      "E:\\sqlquerytool\\sql_queries\\sql2.sql",
+                      "E:\\sqlquerytool\\sql_queries\\sql3.sql",
+                      "E:\\sqlquerytool\\sql_queries\\sql4.sql"
+                  ],
+    "output_dir":  "E:\\sqlquerytool\\query_results"
+}
