@@ -296,8 +296,8 @@ $btnRun.Add_Click({
     }
 
     # Tính phần trăm cho mỗi file (100% chia đều cho số file)
-    $perFilePercent = [math]::Floor(100 / $selectedSQL.Count)
-    $fileIndex = 0
+    $perFilePercent = 100 / $selectedSQL.Count
+    $fileIndex = 1
 
     # Lặp qua từng file SQL và gọi Python cho mỗi file
     foreach ($sqlFile in $selectedSQL) {
@@ -330,13 +330,13 @@ $btnRun.Add_Click({
         Write-Host "Python process for $sqlFile exited." -ForegroundColor Green
 
         # Sau khi xử lý xong file, cập nhật progress bar
+		$progress.Value = $fileIndex * $perFilePercent
         $fileIndex++
-        $progress.Value = $fileIndex * $perFilePercent
-
         # Đảm bảo progress không vượt quá 100%
         if ($progress.Value -gt 100) {
             $progress.Value = 100
         }
+		
     }
 
     [System.Windows.Forms.MessageBox]::Show("All queries processed.", "Done", 0, 'Information')
