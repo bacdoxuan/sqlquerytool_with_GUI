@@ -41,6 +41,14 @@ $exitItem.Add_Click({
 })
 $fileMenu.DropDownItems.Add($exitItem)
 
+# --- Menu Analyze Log ---
+$analyzeLogMenu = New-Object System.Windows.Forms.ToolStripMenuItem
+$analyzeLogMenu.Text = "Analyze Log"
+$analyzeLogMenu.Add_Click({
+    $pyAnalyze = Join-Path $PSScriptRoot "\analyze_log.py"
+    Start-Process python $pyAnalyze
+})
+
 # --- Menu About ---
 $aboutMenu = New-Object System.Windows.Forms.ToolStripMenuItem
 $aboutMenu.Text = "About"
@@ -67,6 +75,7 @@ Version 1.0:
 
 # Thêm các menu vào MenuStrip 
 $menuStrip.Items.Add($fileMenu)
+$menuStrip.Items.Add($analyzeLogMenu)
 $menuStrip.Items.Add($aboutMenu)
 $menuStrip.Items.Add($changeLogMenu)
 
@@ -78,61 +87,14 @@ $form.Controls.Add($menuStrip)
 $lblSql = New-Object System.Windows.Forms.Label
 $lblSql.Text = "Select SQL queries:"
 $lblSql.Location = New-Object System.Drawing.Point(20,30)
-$lblSql.Size = New-Object System.Drawing.Size(200,25)
+$lblSql.Size = New-Object System.Drawing.Size(130,25)
 $form.Controls.Add($lblSql)
 
-# --- Button: Load SQL Files ---
-$btnLoadSQL = New-Object System.Windows.Forms.Button
-$btnLoadSQL.Text = "Load SQL Files"
-$btnLoadSQL.Location = New-Object System.Drawing.Point(650,30)
-$btnLoadSQL.Size = New-Object System.Drawing.Size(110,25)
-$form.Controls.Add($btnLoadSQL)
-$btnLoadSQL.Add_Click({
-    $ofd = New-Object System.Windows.Forms.OpenFileDialog
-    $ofd.Filter = "SQL Files (*.sql)|*.sql"
-    $ofd.Multiselect = $true
-    if ($ofd.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-        foreach ($file in $ofd.FileNames) {
-            $i = $sqlList.Items.Add($file)
-            $sqlList.SetItemChecked($i, $true)
-        }
-    }
-})
-
-# --- Button: Select All in SQL List ---
-$btnSelectAll = New-Object System.Windows.Forms.Button
-$btnSelectAll.Text = "Select All"
-$btnSelectAll.Location = New-Object System.Drawing.Point(540, 30)  # điều chỉnh vị trí theo ý muốn
-$btnSelectAll.Size = New-Object System.Drawing.Size(100, 25)
-$form.Controls.Add($btnSelectAll)
-$btnSelectAll.Add_Click({
-    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
-        $sqlList.SetItemChecked($i, $true)
-    }
-})
-
-# --- Button: Unselect All in SQL List ---
-$btnUnselectAll = New-Object System.Windows.Forms.Button
-$btnUnselectAll.Text = "Unselect All"
-$btnUnselectAll.Location = New-Object System.Drawing.Point(430, 30)  # điều chỉnh vị trí theo ý muốn
-$btnUnselectAll.Size = New-Object System.Drawing.Size(100, 25)
-$form.Controls.Add($btnUnselectAll)
-$btnUnselectAll.Add_Click({
-    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
-        $sqlList.SetItemChecked($i, $false)
-    }
-})
-
-# --- Button: Clear All SQL List ---
-$btnClearAllSQL = New-Object System.Windows.Forms.Button
-$btnClearAllSQL.Text = "Clear All SQL"
-$btnClearAllSQL.Location = New-Object System.Drawing.Point(320, 30)  # Điều chỉnh vị trí theo ý muốn
-$btnClearAllSQL.Size = New-Object System.Drawing.Size(100,25)
-$form.Controls.Add($btnClearAllSQL)
-$btnClearAllSQL.Add_Click({
-    $sqlList.Items.Clear()
-})
-
+# --- Label hiển thị số file được chọn / tổng số file ---
+$lblFileCount = New-Object System.Windows.Forms.Label
+$lblFileCount.Location = New-Object System.Drawing.Point(160,30)
+$lblFileCount.Size = New-Object System.Drawing.Size(160,25)
+$form.Controls.Add($lblFileCount)
 
 # --- CheckedListBox for SQL List ---
 $sqlList = New-Object System.Windows.Forms.CheckedListBox
@@ -148,6 +110,78 @@ if ($sqlFiles.Count -gt 0) {
         $sqlList.SetItemChecked($i, $true)
     }
 }
+
+# --- Hàm cập nhật số lượng file đã chọn / tổng file ---
+function UpdateFileCount {
+    $selectedCount = ($sqlList.CheckedItems.Count)
+    $totalCount = ($sqlList.Items.Count)
+    $lblFileCount.Text = "Selected: $selectedCount / Total: $totalCount"
+}
+
+# Cập nhật số lượng file ngay khi form khởi động
+UpdateFileCount{}
+
+# --- Cập nhật số lượng khi có sự thay đổi trong danh sách ---
+$sqlList.Add_SelectedIndexChanged({
+    Start-Sleep -Milliseconds 50  # Cho phép danh sách cập nhật trước khi lấy số lượng chính xác
+    UpdateFileCount{}
+})
+
+# --- Button: Select All in SQL List ---
+$btnSelectAll = New-Object System.Windows.Forms.Button
+$btnSelectAll.Text = "Select All"
+$btnSelectAll.Location = New-Object System.Drawing.Point(540, 30)
+$btnSelectAll.Size = New-Object System.Drawing.Size(100, 25)
+$form.Controls.Add($btnSelectAll)
+$btnSelectAll.Add_Click({
+    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
+        $sqlList.SetItemChecked($i, $true)
+    }
+    UpdateFileCount{}
+})
+
+# --- Button: Unselect All in SQL List ---
+$btnUnselectAll = New-Object System.Windows.Forms.Button
+$btnUnselectAll.Text = "Unselect All"
+$btnUnselectAll.Location = New-Object System.Drawing.Point(430, 30)
+$btnUnselectAll.Size = New-Object System.Drawing.Size(100, 25)
+$form.Controls.Add($btnUnselectAll)
+$btnUnselectAll.Add_Click({
+    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
+        $sqlList.SetItemChecked($i, $false)
+    }
+    UpdateFileCount{}
+})
+
+# --- Button: Clear All SQL List ---
+$btnClearAllSQL = New-Object System.Windows.Forms.Button
+$btnClearAllSQL.Text = "Clear All SQL"
+$btnClearAllSQL.Location = New-Object System.Drawing.Point(320, 30)
+$btnClearAllSQL.Size = New-Object System.Drawing.Size(100,25)
+$form.Controls.Add($btnClearAllSQL)
+$btnClearAllSQL.Add_Click({
+    $sqlList.Items.Clear()
+    UpdateFileCount{}
+})
+
+# --- Load SQL Files ---
+$btnLoadSQL = New-Object System.Windows.Forms.Button
+$btnLoadSQL.Text = "Load SQL Files"
+$btnLoadSQL.Location = New-Object System.Drawing.Point(650,30)
+$btnLoadSQL.Size = New-Object System.Drawing.Size(110,25)
+$form.Controls.Add($btnLoadSQL)
+$btnLoadSQL.Add_Click({
+    $ofd = New-Object System.Windows.Forms.OpenFileDialog
+    $ofd.Filter = "SQL Files (*.sql)|*.sql"
+    $ofd.Multiselect = $true
+    if ($ofd.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        foreach ($file in $ofd.FileNames) {
+            $i = $sqlList.Items.Add($file)
+            $sqlList.SetItemChecked($i, $true)
+        }
+    }
+    UpdateFileCount{}
+})
 
 # --- Label: Database Files ---
 $lblDb = New-Object System.Windows.Forms.Label
@@ -296,8 +330,8 @@ $btnRun.Add_Click({
     }
 
     # Tính phần trăm cho mỗi file (100% chia đều cho số file)
-    $perFilePercent = [math]::Floor(100 / $selectedSQL.Count)
-    $fileIndex = 0
+    $perFilePercent = 100 / $selectedSQL.Count
+    $fileIndex = 1
 
     # Lặp qua từng file SQL và gọi Python cho mỗi file
     foreach ($sqlFile in $selectedSQL) {
@@ -330,9 +364,8 @@ $btnRun.Add_Click({
         Write-Host "Python process for $sqlFile exited." -ForegroundColor Green
 
         # Sau khi xử lý xong file, cập nhật progress bar
+		$progress.Value = $fileIndex * $perFilePercent
         $fileIndex++
-        $progress.Value = $fileIndex * $perFilePercent
-
         # Đảm bảo progress không vượt quá 100%
         if ($progress.Value -gt 100) {
             $progress.Value = 100

@@ -1,8 +1,15 @@
-import sys, os, json, sqlite3, csv
+import sys, os, json, sqlite3, csv, time, datetime
 
 # Tìm thư mục gốc của dự án (giả sử file run_queries.py nằm trong folder scripts)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)  # Lấy parent của folder scripts
+
+# Thư mục log
+LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "LogFile")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, "query_log.csv")
+
+start_time = time.time()
 
 # Vì giờ có thể truyền tham số thư mục output, nếu không truyền thì sử dụng mặc định.
 if len(sys.argv) < 3:
@@ -60,6 +67,8 @@ except Exception as e:
     print(f"ERROR: Query failed: {str(e)}", flush=True)
     sys.exit(1)
 
+elapsed = round(time.time() - start_time, 3)
+
 # Lưu kết quả ra file CSV
 csv_filename = os.path.splitext(sql_filename)[0] + ".csv"
 csv_path = os.path.join(OUTPUT_FOLDER, csv_filename)
@@ -74,5 +83,23 @@ try:
 except Exception as e:
     print(f"ERROR: Failed to write CSV: {str(e)}", flush=True)
     sys.exit(1)
+
+# --- Ghi log ---
+log_row = [
+    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    sql_filename,
+    db_file,
+    csv_filename,
+    elapsed
+]
+log_header = ["datetime", "sql_file", "db_file", "csv_file", "elapsed_sec"]
+
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, "w", newline='', encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(log_header)
+with open(LOG_FILE, "a", newline='', encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(log_row)
 
 print("DONE", flush=True)
