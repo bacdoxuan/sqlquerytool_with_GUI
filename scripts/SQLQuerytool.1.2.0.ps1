@@ -3,6 +3,10 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $ErrorActionPreference = "Stop"
 
+###################################################################################################
+# --- Load SQLite Assembly ---
+Add-Type -Path "$PSScriptRoot\lib\System.Data.SQLite.dll"
+###################################################################################################
 # --- Initialize Form ---
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "SQL Query Tool"
@@ -10,12 +14,14 @@ $form.Size = New-Object System.Drawing.Size(800,600)
 $form.StartPosition = "CenterScreen"
 $form.Font = New-Object System.Drawing.Font("Segoe UI",10)
 
+###################################################################################################
 # --- Global Data Holders ---
 $dbFiles = @()
 $sqlFiles = @()
 $outputFolder = ""
 $mappingFile = ""
 
+###################################################################################################
 # Load default config if available
 $configPath = ".\app_config.json"
 if (Test-Path $configPath) {
@@ -26,6 +32,7 @@ if (Test-Path $configPath) {
     $mappingFile = $cfg.mapping_file
 }
 
+###################################################################################################
 # Tạo MenuStrip
 $menuStrip = New-Object System.Windows.Forms.MenuStrip
 
@@ -83,6 +90,7 @@ $menuStrip.Items.Add($aboutMenu)
 $form.MainMenuStrip = $menuStrip
 $form.Controls.Add($menuStrip)
 
+###################################################################################################
 # --- Label: SQL Files ---
 $lblSql = New-Object System.Windows.Forms.Label
 $lblSql.Text = "Select SQL queries:"
@@ -182,56 +190,109 @@ $btnLoadSQL.Add_Click({
     }
     UpdateFileCount{}
 })
-
+###################################################################################################
 # --- Label: Database Files ---
 $lblDb = New-Object System.Windows.Forms.Label
-$lblDb.Text = "Select SQLite databases:"
+$lblDb.Text = "SQLite Databases:"
 $lblDb.Location = New-Object System.Drawing.Point(20,180)
 $lblDb.Size = New-Object System.Drawing.Size(200,25)
 $form.Controls.Add($lblDb)
 
-# --- Button: Load Database Files ---
+# --- ListView hiển thị danh sách DB ---
+$listViewDB = New-Object System.Windows.Forms.ListView
+$listViewDB.Location = New-Object System.Drawing.Point(20,205)
+$listViewDB.Size = New-Object System.Drawing.Size(740,100)
+$listViewDB.View = "Details"
+$listViewDB.CheckBoxes = $true
+$listViewDB.FullRowSelect = $true
+$listViewDB.GridLines = $true
+
+# Thêm cột
+$listViewDB.Columns.Add("Check", 60)
+$listViewDB.Columns.Add("Number", 60)
+$listViewDB.Columns.Add("Database", 500)
+$listViewDB.Columns.Add("Status", 100)
+
+# Thêm listview vào form
+$form.Controls.Add($listViewDB)
+
+# Hàm kiểm tra kết nối DB
+function Test-DBConnection($dbPath) {
+    if (-Not (Test-Path $dbPath)) {
+        return "NOK"
+    }
+
+    try {
+        $connStr = "Data Source=$dbPath;Version=3;"
+        $conn = New-Object System.Data.SQLite.SQLiteConnection($connStr)
+        $conn.Open()
+        $conn.Close()
+        return "OK"
+    }
+    catch {
+        return "NOK"
+    }
+}
+
+function Load-DBList($dbFiles) {
+    $listViewDB.Items.Clear()
+    $i = 1
+    foreach ($db in $dbFiles) {
+        $status = Test-DBConnection $db
+        $item = New-Object System.Windows.Forms.ListViewItem ""
+        $item.SubItems.Add($i.ToString())
+        $item.SubItems.Add($db)
+        $item.SubItems.Add($status)
+        $item.Checked = $true
+        $listViewDB.Items.Add($item)
+        $i++
+    }
+}
+
+# Sau khi load xong app_config.json
+if ($dbFiles -and $dbFiles.Count -gt 0) {
+    Load-DBList $dbFiles
+}
+
+# --- Button: Load DB Files ---
 $btnLoadDB = New-Object System.Windows.Forms.Button
 $btnLoadDB.Text = "Load DB Files"
 $btnLoadDB.Location = New-Object System.Drawing.Point(650,180)
 $btnLoadDB.Size = New-Object System.Drawing.Size(110,25)
 $form.Controls.Add($btnLoadDB)
+
 $btnLoadDB.Add_Click({
     $ofdDB = New-Object System.Windows.Forms.OpenFileDialog
-    # Chỉ hiển thị các file có đuôi .db và .db3
     $ofdDB.Filter = "SQLite Database Files (*.db;*.db3)|*.db;*.db3"
     $ofdDB.Multiselect = $true
+
     if ($ofdDB.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $iStart = $listViewDB.Items.Count + 1
         foreach ($file in $ofdDB.FileNames) {
-            $i = $dbList.Items.Add($file)
-            $dbList.SetItemChecked($i, $true)
+            $status = Test-DBConnection $file
+            $item = New-Object System.Windows.Forms.ListViewItem ""
+            $item.SubItems.Add("$iStart")
+            $item.SubItems.Add($file)
+            $item.SubItems.Add($status)
+            $item.Checked = $true
+            $listViewDB.Items.Add($item)
+            $iStart++
         }
     }
 })
 
-# --- Button: Clear All Database List ---
+# --- Button: Clear All DB ---
 $btnClearAllDB = New-Object System.Windows.Forms.Button
 $btnClearAllDB.Text = "Clear All DB"
-$btnClearAllDB.Location = New-Object System.Drawing.Point(540 ,180)  # Điều chỉnh vị trí theo ý muốn
-$btnClearAllDB.Size = New-Object System.Drawing.Size(100,25)
+$btnClearAllDB.Location = New-Object System.Drawing.Point(530,180)
+$btnClearAllDB.Size = New-Object System.Drawing.Size(110,25)
 $form.Controls.Add($btnClearAllDB)
+
 $btnClearAllDB.Add_Click({
-    $dbList.Items.Clear()
+    $listViewDB.Items.Clear()
 })
 
-# --- CheckedListBox for Database Files ---
-$dbList = New-Object System.Windows.Forms.CheckedListBox
-$dbList.Location = New-Object System.Drawing.Point(20,205)
-$dbList.Size = New-Object System.Drawing.Size(740,100)
-$dbList.CheckOnClick = $true
-$form.Controls.Add($dbList)
-
-if ($dbFiles.Count -gt 0) {
-    foreach ($d in $dbFiles) {
-        $i = $dbList.Items.Add($d)
-        $dbList.SetItemChecked($i, $true)
-    }
-}
+###################################################################################################
 
 # --- Mapping File Label ---
 $lblMap = New-Object System.Windows.Forms.Label
@@ -261,6 +322,7 @@ $btnMap.Add_Click({
     }
 })
 
+###################################################################################################
 # --- Output Folder Label ---
 $lblOut = New-Object System.Windows.Forms.Label
 $lblOut.Text = "Output folder:"
@@ -288,6 +350,7 @@ $btnOut.Add_Click({
     }
 })
 
+###################################################################################################
 # --- Progress Bar ---
 $progress = New-Object System.Windows.Forms.ProgressBar
 $progress.Location = New-Object System.Drawing.Point(20,440)
@@ -296,6 +359,7 @@ $progress.Minimum = 0
 $progress.Maximum = 100
 $form.Controls.Add($progress)
 
+###################################################################################################
 # --- Run Button ---
 $btnRun = New-Object System.Windows.Forms.Button
 $btnRun.Text = "Run Selected Queries"
@@ -303,6 +367,7 @@ $btnRun.Location = New-Object System.Drawing.Point(20,475)
 $btnRun.Size = New-Object System.Drawing.Size(250,30)
 $form.Controls.Add($btnRun)
 
+###################################################################################################
 # --- Save Config Button ---
 $btnSave = New-Object System.Windows.Forms.Button
 $btnSave.Text = "Save Configuration"
@@ -310,6 +375,7 @@ $btnSave.Location = New-Object System.Drawing.Point(290,475)
 $btnSave.Size = New-Object System.Drawing.Size(250,30)
 $form.Controls.Add($btnSave)
 
+###################################################################################################
 # --- Run Queries Event (Phiên bản đơn giản hoá) ---
 # Xác định đường dẫn tuyệt đối đến file run_queries.py nằm trong thư mục scripts
 $pyFile = Join-Path $PSScriptRoot "\run_queries.py"
