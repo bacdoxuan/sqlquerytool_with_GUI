@@ -4,7 +4,24 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 
 ---
 
-## [v1.1.0] – 2025-06-17
+## [v1.2.0] – 2025-06-17
+
+### Nâng cấp mới
+- Chuyển từ `CheckedListBox` sang `ListView` để hiển thị danh sách database SQLite với 4 cột:
+  - Checkbox
+  - STT
+  - Tên database
+  - Trạng thái kết nối (OK/NOK)
+- Tự động kiểm tra trạng thái kết nối đến từng database khi load từ file cấu hình mặc định
+- Thêm nút “Load DB Files” để người dùng chọn thêm database thủ công
+- Thêm nút “Clear All DB” để xoá toàn bộ danh sách đang hiển thị
+- Kết nối trực tiếp đến SQLite database bằng thư viện `System.Data.SQLite.dll` và `SQLite.Interop.dll`
+- Cho phép cấu hình thư viện thủ công từ thư mục `scripts\lib\`
+- Tăng tính ổn định khi khởi động chương trình và chuẩn bị sẵn cho modular hóa giao diện
+
+---
+
+## [v1.1.0] – 2025-06-16
 
 ### Nâng cấp mới
 - Hiển thị số lượng file SQL đã chọn / tổng số trên giao diện
@@ -33,23 +50,10 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 
 ---
 
-### Tri thức & quyết định thiết kế
-- PowerShell dùng `Windows.Forms` để build GUI thủ công, nhẹ, dễ đóng gói
-- Encoding: toàn bộ chuỗi hiển thị sử dụng tiếng Anh để tránh lỗi Unicode
-- Phân tách nhiệm vụ:
-  - `.ps1`: giao diện và truyền tham số
-  - `.py`: xử lý logic dữ liệu
-- Tương thích chạy offline, không cần internet
-- Dễ mở rộng để:
-  - Xuất log mỗi lần chạy
-  - Mở file CSV tự động
-  - Dashboard thống kê hoặc preview dữ liệu
-
----
-
 ## Ý tưởng phát triển tiếp theo
-- Cho phép chọn nhiều file mapping (multi-config)
+- Quản lý nhiều cấu hình (nhiều file `.json`) thay vì chỉ 1 cấu hình mặc định
 - Giao diện hỗ trợ Dark Mode
-- Tự động mở file CSV đầu ra sau khi chạy
-- Tích hợp xem trước dữ liệu truy vấn trong GUI
-- Mở rộng hỗ trợ các cơ sở dữ liệu khác như MySQL, SQL Server, PostgreSQL
+- Auto-open file CSV sau khi chạy
+- Xem trước dữ liệu truy vấn trong GUI
+- Hỗ trợ backend MySQL / SQL Server / PostgreSQL
+- Thêm biểu đồ hiệu suất trung bình hoặc theo ngày

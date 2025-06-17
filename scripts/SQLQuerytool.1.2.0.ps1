@@ -60,22 +60,15 @@ $analyzeLogMenu.Add_Click({
 $aboutMenu = New-Object System.Windows.Forms.ToolStripMenuItem
 $aboutMenu.Text = "About"
 $aboutMenu.Add_Click({
-    [System.Windows.Forms.MessageBox]::Show("SQL Query Tool v1.0`nAuthor: Do Xuan Bac - Vietnamobile", "About", 0, 'Information')
+    [System.Windows.Forms.MessageBox]::Show("SQL Query Tool v1.2.0`nAuthor: Do Xuan Bac - Vietnamobile", "About", 0, 'Information')
 })
 
 # --- Menu Change Log ---
 $changeLogMenu = New-Object System.Windows.Forms.ToolStripMenuItem
-$changeLogMenu.Text = "Change Log"
+$changeLogMenu.Text = "Change Logs"
 $changeLogMenu.Add_Click({
     $changeLogText = @"
-Version 1.0:
-- Create GUI for daily progressing data
-- Mutli select sql file
-- Mutil select db file
-- Mapping sql - db
-- Select output folder
-- Save configuration for faster loading next time
-- Progress bar
+Check the change log in file 'CHANGELOG.md' in the project directory.
 "@
     [System.Windows.Forms.MessageBox]::Show($changeLogText, "Change Log", 0, 'Information')
 })
