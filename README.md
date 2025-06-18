@@ -4,31 +4,38 @@
 
 ## Features
 
-- GUI built in **PowerShell (Windows.Forms)**, lightweight and no installer needed
-- Select and execute multiple `.sql` files across one or more `.db` files
+- **PowerShell GUI (Windows.Forms)** – no installer needed
+- Select and execute multiple `.sql` files on one or more `.db` files
+- **Database management upgrades in v1.2.0**:
+  - New **ListView database selection** with 4 columns:
+    - Checkbox
+    - ID
+    - Database Name
+    - Connection Status (OK/NOK)
+  - Auto-check SQLite connection upon loading configs
+  - **Load DB Files**: manually select additional databases
+  - **Clear All DB**: remove all entries from DB list
 - **Mapping file (.json)** to associate each SQL file with a specific database
 - Auto-export results to `.csv` in selected output folder
-- **Real-time progress bar** linked to Python stdout
-- Save/load configuration via `app_config.json`
-- Execution logs written to `LogFile/query_log.csv`
-- Analyze logs with **performance charts** using Python's `matplotlib`
+- **Execution logs** written to `LogFile/query_log.csv`
+- Analyze logs via **performance charts** using Python (`matplotlib`)
 
-## Project Structure
-
-
-├── config/
-│   └── sql_to_db_mapping.json         # Maps .sql → .db
-├── databases/                         # SQLite .db files
-├── sql_queries/                       # .sql files to execute
-├── query_results/                     # Output .csv files
+ ## Project Structure
+ 
+```bash
+├── config/              # SQL → DB mapping (.json)
+├── databases/           # SQLite database files (.db)
+├── sql_queries/         # SQL query scripts
+├── query_results/       # Output CSV files
 ├── LogFile/
-│   └── query_log.csv                  # Execution log
+│   └── query_log.csv    # Execution logs
 ├── scripts/
-│   ├── SQLQuerytool.ps1              # Main GUI
-│   ├── run_queries.py                # Executes SQL
-│   ├── analyze_log.py                # Visualizes log performance
-│   └── app_config.json               # Saved GUI settings
-
+│   ├── SQLQuerytool.ps1 # Main GUI script
+│   ├── run_queries.py   # Python execution engine
+│   ├── analyze_log.py   # Performance visualization
+│   ├── app_config.json  # Saved app settings
+│   └── lib/             # Contains System.Data.SQLite.dll
+```
 
 ## Requirements
 
@@ -47,15 +54,15 @@ pip install pandas matplotlib
 
 ## Log Analysis
 
-From the GUI:  
-**File → Analyze Log**  
+From the GUI: **File → Analyze Log**
 This triggers `analyze_log.py`, which reads the execution log and plots a **horizontal bar chart** showing which SQL files take the longest to execute.
 
 ## Version Tracker
 
 | Version | Date       | Type    | Highlights                                                             |
 |---------|------------|---------|------------------------------------------------------------------------|
-| 1.1.0   | 2025-06-17 | Minor | SQL count display, CSV execution log, performance chart                |
+| 1.2.0   | 2025-06-17 | Minor | ListView-based DB management, auto-check SQLite status, GUI improvements |
+| 1.1.0   | 2025-06-16 | Minor | SQL count display, CSV execution log, performance chart                |
 | 1.0.0   | 2025-06-15 | Init  | GUI tool to run .sql on .db files and export to CSV                    |
 
 _See full changelog in [`log.md`](./log.md)_
