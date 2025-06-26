@@ -86,7 +86,7 @@ except Exception as e:
 
 # --- Ghi log ---
 log_row = [
-    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
     sql_filename,
     db_file,
     csv_filename,
