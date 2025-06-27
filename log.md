@@ -4,6 +4,36 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 
 ---
 
+## [v1.4.0] – 2025-06-26
+
+### Nâng cấp mới
+- Refactor script `analyze_log.py`:
+  - Sử dụng `pandas` để xử lý `query_log.csv`
+  - Hiển thị hai biểu đồ so sánh:
+    - **Biểu đồ trái**: Thời gian chạy truy vấn theo từng SQL trong **ngày gần nhất**
+    - **Biểu đồ phải**: Thời gian truy vấn lâu nhất cho từng SQL từ **toàn bộ log**
+  - Biểu đồ hiển thị song song (subplots), có **label thời gian (giây)** trên từng thanh
+  - Trục Y sắp xếp theo **tên SQL tăng dần (A → Z)**
+- Tối ưu hiệu năng SQL đáng kể (một số truy vấn giảm từ >40s xuống còn 0.05s)
+- Đặt nền tảng phân tích log hiệu suất cho các bản build lớn sau
+
+---
+
+## [v1.3.0] – 2025-06-20
+
+### Nâng cấp mới
+- Tái cấu trúc toàn bộ giao diện:
+  - Nâng chiều cao vùng `SQL Queries` và tích hợp nút `"Run Queries"` ngay bên dưới danh sách SQL
+  - Di chuyển `GroupBox Database` và `GroupBox Configuration` xuống thấp hơn để phù hợp bố cục
+- Tái cấu trúc lại chức năng quản lý cấu hình, chuyển toàn bộ lên Menu File:
+  - Save Default Config: Lưu lại cấu hình hiện tại vào file app_config.json trong thư mục scripts
+  - Save User Config/Load User Config: cho phép người dùng lựa chọn save/load file cấu hình theo tên và thư mục tự chọn
+- Refactor lại toàn bộ mã nguồn để tương thích PowerShell:
+  - **Xoá toàn bộ emoji/ký tự đặc biệt**
+  - **Sử dụng `ListView` cho database**, `CheckedListBox` cho danh sách SQL
+
+---
+
 ## [v1.2.0] – 2025-06-17
 
 ### Nâng cấp mới
@@ -49,11 +79,3 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 - Nút “Save Configuration” để lưu lại config cho lần chạy sau
 
 ---
-
-## Ý tưởng phát triển tiếp theo
-- Quản lý nhiều cấu hình (nhiều file `.json`) thay vì chỉ 1 cấu hình mặc định
-- Giao diện hỗ trợ Dark Mode
-- Auto-open file CSV sau khi chạy
-- Xem trước dữ liệu truy vấn trong GUI
-- Hỗ trợ backend MySQL / SQL Server / PostgreSQL
-- Thêm biểu đồ hiệu suất trung bình hoặc theo ngày
