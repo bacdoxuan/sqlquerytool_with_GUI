@@ -1,8 +1,4 @@
-import sys, os, json, sqlite3, csv, time, datetime
-
-# Tìm thư mục gốc của dự án (giả sử file run_queries.py nằm trong folder scripts)
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)  # Lấy parent của folder scripts
+import sys, os, json, sqlite3, csv, time, datetime, argparse
 
 # Thư mục log
 LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "LogFile")
@@ -11,25 +7,22 @@ LOG_FILE = os.path.join(LOG_DIR, "query_log.csv")
 
 start_time = time.time()
 
-# Vì giờ có thể truyền tham số thư mục output, nếu không truyền thì sử dụng mặc định.
-if len(sys.argv) < 3:
-    OUTPUT_FOLDER = os.path.join(project_root, "query_results")
-else:
-    # Sử dụng thư mục output được truyền từ GUI; đảm bảo đường dẫn tuyệt đối
-    OUTPUT_FOLDER = os.path.abspath(sys.argv[2])
+# --- Argument Parsing ---
+# Script giờ sẽ nhận 3 tham số: file SQL, file mapping, và thư mục output.
+parser = argparse.ArgumentParser(description="Run a single SQL query against a mapped SQLite database.")
+parser.add_argument("sql_file", help="The absolute path to the .sql file to be executed.")
+parser.add_argument("mapping_file", help="The absolute path to the .json mapping file.")
+parser.add_argument("output_dir", help="The absolute path to the directory where results will be saved.")
+args = parser.parse_args()
 
-# Kiểm tra tham số đối với file SQL
-if len(sys.argv) < 2:
-    print("ERROR: Expected at least 1 argument (SQL file path).", flush=True)
-    sys.exit(1)
+sql_file_path = args.sql_file
+MAPPING_FILE = args.mapping_file
+OUTPUT_FOLDER = os.path.abspath(args.output_dir)
 
-# Nhận tên file SQL từ tham số
-sql_file_path = sys.argv[1]
 sql_filename = os.path.basename(sql_file_path)
 print(f"PYTHON DEBUG: Received SQL file: {sql_file_path}", flush=True)
-
-# Sửa lại đường dẫn cho file mapping, không đổi
-MAPPING_FILE = os.path.join(project_root, "config", "sql_to_db_mapping.json")
+print(f"PYTHON DEBUG: Received Mapping file: {MAPPING_FILE}", flush=True)
+print(f"PYTHON DEBUG: Received Output folder: {OUTPUT_FOLDER}", flush=True)
 
 # Đọc file mapping
 try:
