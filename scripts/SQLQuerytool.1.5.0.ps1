@@ -1,4 +1,4 @@
-# SQLQueryTool_v1.3.0.ps1
+# SQLQueryTool_v1.5.0.ps1
 
 Set-ExecutionPolicy RemoteSigned -Scope Process
 Add-Type -AssemblyName System.Windows.Forms
@@ -10,7 +10,7 @@ Add-Type -Path "$PSScriptRoot\lib\System.Data.SQLite.dll"
 
 # Initialize Form
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "SQL Query Tool v1.4.0"
+$form.Text = "SQL Query Tool v1.5.0"
 $form.Size = New-Object System.Drawing.Size(820, 660)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = 'FixedSingle'
@@ -388,6 +388,11 @@ $form.Controls.Add($progress)
 # Run Logic (Button đã nằm ở GroupBox SQL - gọi chung biến $btnRun)
 $pyFile = Join-Path $PSScriptRoot "\run_queries.py"
 $btnRun.Add_Click({
+	$pythonHome = [System.Environment]::GetEnvironmentVariable("PYTHON_HOME","User")
+	if (-not $pythonHome) {
+		[System.Windows.Forms.MessageBox]::Show("PYTHON_HOME is not set.","Error",0,'Error')
+		return
+	}
     $progress.Value = 0
     $selectedSQL = @()
     foreach ($sql in $sqlList.CheckedItems) { $selectedSQL += $sql }
@@ -401,10 +406,11 @@ $btnRun.Add_Click({
     $idx = 1
 
     foreach ($sqlFile in $selectedSQL) {
+
         $arg = "{0} ""{1}"" ""{2}"" ""{3}""" -f $pyFile, $sqlFile, $txtMap.Text, $txtOut.Text
 
         $psi = New-Object System.Diagnostics.ProcessStartInfo
-        $psi.FileName = "python"
+        $psi.FileName = Join-Path $pythonHome "python.exe"
         $psi.Arguments = $arg
         $psi.UseShellExecute = $false
         $psi.RedirectStandardOutput = $true
