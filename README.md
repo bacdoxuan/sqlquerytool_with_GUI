@@ -20,8 +20,8 @@
 - **Execution logs** written to `LogFile/query_log.csv`
 - Analyze logs via **performance charts** using Python (`matplotlib`)
 
- ## Project Structure
- 
+## Project Structure
+
 ```bash
 ├── config/              # SQL → DB mapping (.json)
 ├── databases/           # SQLite database files (.db)
@@ -61,6 +61,9 @@ This triggers `analyze_log.py`, which reads the execution log and plots a **hori
 
 | Version | Date       | Type    | Highlights                                                             |
 |---------|------------|---------|------------------------------------------------------------------------|
+| 1.5.1   | 2026-04-22 | Minor   | Add 3G/4G query filters, GUI tuning, version sync                      |
+| 1.4.0   | 2025-06-26 | Minor   | Log analysis charts (latest/max), pandas + matplotlib, performance boost |
+| 1.3.0   | 2025-06-20 | Major | GUI refactor, emoji cleanup, menu restructure, config management updates |
 | 1.2.0   | 2025-06-17 | Minor | ListView-based DB management, auto-check SQLite status, GUI improvements |
 | 1.1.0   | 2025-06-16 | Minor | SQL count display, CSV execution log, performance chart                |
 | 1.0.0   | 2025-06-15 | Init  | GUI tool to run .sql on .db files and export to CSV                    |
@@ -70,7 +73,7 @@ _See full changelog in [`log.md`](./log.md)_
 ## Future Enhancements
 
 - Dark Mode support
-- Auto-open output .csv files after run
+- Open sql file directly in app
 - Embedded data preview panel
 - Multi-config / batch SQL mapping support
 - Expanded DB backend support (MySQL, PostgreSQL, etc.)

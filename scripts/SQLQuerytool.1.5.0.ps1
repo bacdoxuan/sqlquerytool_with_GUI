@@ -10,8 +10,8 @@ Add-Type -Path "$PSScriptRoot\lib\System.Data.SQLite.dll"
 
 # Initialize Form
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "SQL Query Tool v1.5.0"
-$form.Size = New-Object System.Drawing.Size(820, 660)
+$form.Text = "SQL Query Tool v1.5.1"
+$form.Size = New-Object System.Drawing.Size(820, 680)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = 'FixedSingle'
 $form.MaximizeBox = $false
@@ -93,7 +93,7 @@ $analyzeLogMenu.Add_Click({
 $aboutMenu = New-Object System.Windows.Forms.ToolStripMenuItem
 $aboutMenu.Text = "About"
 $aboutMenu.Add_Click({
-    [System.Windows.Forms.MessageBox]::Show("SQL Query Tool v1.4.0`nAuthor: Do Xuan Bac - Vietnamobile", "About", 0, 'Information')
+    [System.Windows.Forms.MessageBox]::Show("SQL Query Tool v1.5.1`nAuthor: Do Xuan Bac - Vietnamobile", "About", 0, 'Information')
 })
 
 # --- Menu Change Log ---
@@ -139,7 +139,7 @@ $grpSQL.Controls.Add($sqlList)
 # Button: Select All
 $btnSelectAll = New-Object System.Windows.Forms.Button
 $btnSelectAll.Text = "Select All"
-$btnSelectAll.Location = New-Object System.Drawing.Point(620, 110)
+$btnSelectAll.Location = New-Object System.Drawing.Point(620, 85)
 $btnSelectAll.Size = New-Object System.Drawing.Size(140, 25)
 $btnSelectAll.Add_Click({
     for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
@@ -152,7 +152,7 @@ $grpSQL.Controls.Add($btnSelectAll)
 # Button: Unselect All
 $btnUnselectAll = New-Object System.Windows.Forms.Button
 $btnUnselectAll.Text = "Unselect All"
-$btnUnselectAll.Location = New-Object System.Drawing.Point(620, 80)
+$btnUnselectAll.Location = New-Object System.Drawing.Point(620, 110)
 $btnUnselectAll.Size = New-Object System.Drawing.Size(140, 25)
 $btnUnselectAll.Add_Click({
     for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
@@ -162,10 +162,46 @@ $btnUnselectAll.Add_Click({
 })
 $grpSQL.Controls.Add($btnUnselectAll)
 
+# Button: Select 3G
+$btnSelect3G = New-Object System.Windows.Forms.Button
+$btnSelect3G.Text = "Select 3G queries"
+$btnSelect3G.Location = New-Object System.Drawing.Point(620, 145)
+$btnSelect3G.Size = New-Object System.Drawing.Size(140, 25)
+$btnSelect3G.Add_Click({
+    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
+        $fileName = [System.IO.Path]::GetFileName($sqlList.Items[$i])
+        if ($fileName.StartsWith("3G_")) {
+            $sqlList.SetItemChecked($i, $true)
+        } else {
+            $sqlList.SetItemChecked($i, $false)
+        }
+    }
+    UpdateFileCount
+})
+$grpSQL.Controls.Add($btnSelect3G)
+
+# Button: Select 4G
+$btnSelect4G = New-Object System.Windows.Forms.Button
+$btnSelect4G.Text = "Select 4G queries"
+$btnSelect4G.Location = New-Object System.Drawing.Point(620, 170)
+$btnSelect4G.Size = New-Object System.Drawing.Size(140, 25)
+$btnSelect4G.Add_Click({
+    for ($i = 0; $i -lt $sqlList.Items.Count; $i++) {
+        $fileName = [System.IO.Path]::GetFileName($sqlList.Items[$i])
+        if ($fileName.StartsWith("4G_")) {
+            $sqlList.SetItemChecked($i, $true)
+        } else {
+            $sqlList.SetItemChecked($i, $false)
+        }
+    }
+    UpdateFileCount
+})
+$grpSQL.Controls.Add($btnSelect4G)
+
 # Button: Load SQL Files
 $btnLoadSQL = New-Object System.Windows.Forms.Button
 $btnLoadSQL.Text = "Load SQL Files"
-$btnLoadSQL.Location = New-Object System.Drawing.Point(620, 50)
+$btnLoadSQL.Location = New-Object System.Drawing.Point(620, 25)
 $btnLoadSQL.Size = New-Object System.Drawing.Size(140, 25)
 $btnLoadSQL.Add_Click({
     $ofd = New-Object System.Windows.Forms.OpenFileDialog
@@ -186,7 +222,7 @@ $grpSQL.Controls.Add($btnLoadSQL)
 # Button: Clear All SQL
 $btnClearAllSQL = New-Object System.Windows.Forms.Button
 $btnClearAllSQL.Text = "Clear All SQL"
-$btnClearAllSQL.Location = New-Object System.Drawing.Point(620, 140)
+$btnClearAllSQL.Location = New-Object System.Drawing.Point(620, 50)
 $btnClearAllSQL.Size = New-Object System.Drawing.Size(140, 25)
 $btnClearAllSQL.Add_Click({
     $sqlList.Items.Clear()
@@ -197,7 +233,7 @@ $grpSQL.Controls.Add($btnClearAllSQL)
 # Button: Run Queries
 $btnRun = New-Object System.Windows.Forms.Button
 $btnRun.Text = "Run Queries"
-$btnRun.Location = New-Object System.Drawing.Point(620, 175)
+$btnRun.Location = New-Object System.Drawing.Point(620, 205)
 $btnRun.Size = New-Object System.Drawing.Size(140, 30)
 $grpSQL.Controls.Add($btnRun)
 

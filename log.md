@@ -4,9 +4,28 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 
 ---
 
+## [v1.5.1] – 2026-04-22
+
+### Nâng cấp mới
+
+- Bổ sung 2 nút filter nhanh cho danh sách SQL:
+  - **Select 3G queries**: Chỉ chọn các file bắt đầu bằng `3G_`.
+  - **Select 4G queries**: Chỉ chọn các file bắt đầu bằng `4G_`.
+- Tối ưu lại bố cục các nút chức năng trong GroupBox SQL Queries (sắp xếp theo cặp và căn chỉnh lề).
+- Cập nhật đồng bộ hiển thị phiên bản trên giao diện và Menu About.
+
+## [v1.5.0] – 2026-04-22
+
+### Nâng cấp mới
+
+- Thêm kiểm tra biến môi trường `PYTHON_HOME` trước khi chạy truy vấn.
+- Tinh chỉnh logic load/save cấu hình mặc định.
+- Thêm menu "Change Logs" để hướng dẫn xem lịch sử cập nhật.
+
 ## [v1.4.0] – 2025-06-26
 
 ### Nâng cấp mới
+
 - Refactor script `analyze_log.py`:
   - Sử dụng `pandas` để xử lý `query_log.csv`
   - Hiển thị hai biểu đồ so sánh:
@@ -22,6 +41,7 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 ## [v1.3.0] – 2025-06-20
 
 ### Nâng cấp mới
+
 - Tái cấu trúc toàn bộ giao diện:
   - Nâng chiều cao vùng `SQL Queries` và tích hợp nút `"Run Queries"` ngay bên dưới danh sách SQL
   - Di chuyển `GroupBox Database` và `GroupBox Configuration` xuống thấp hơn để phù hợp bố cục
@@ -37,6 +57,7 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 ## [v1.2.0] – 2025-06-17
 
 ### Nâng cấp mới
+
 - Chuyển từ `CheckedListBox` sang `ListView` để hiển thị danh sách database SQLite với 4 cột:
   - Checkbox
   - STT
@@ -54,6 +75,7 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 ## [v1.1.0] – 2025-06-16
 
 ### Nâng cấp mới
+
 - Hiển thị số lượng file SQL đã chọn / tổng số trên giao diện
 - Cải tiến sự kiện cập nhật CheckedListBox để phản ánh chính xác số lượng khi chọn/bỏ chọn
 - Ghi log quá trình chạy truy vấn vào `LogFile/query_log.csv` với thông tin:
@@ -69,6 +91,7 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 ## [v1.0.0] – 2025-06-15
 
 ### Tính năng chính
+
 - Giao diện PowerShell thân thiện người dùng (`.ps1`)
 - Chọn nhiều file `.sql`, `.db`, thư mục output và file mapping `.json`
 - Tích chọn từng query SQL để chạy riêng
