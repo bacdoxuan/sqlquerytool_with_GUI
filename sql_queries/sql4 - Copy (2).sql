@@ -1,1 +1,0 @@
-SELECT 'sql4 - database2'
