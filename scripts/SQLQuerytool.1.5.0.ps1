@@ -421,6 +421,20 @@ $progress.Maximum = 100
 $progress.Style = 'Continuous'
 $form.Controls.Add($progress)
 
+# Label: Current Query Info
+$lblCurrentQuery = New-Object System.Windows.Forms.Label
+$lblCurrentQuery.Location = New-Object System.Drawing.Point(10, 600)
+$lblCurrentQuery.Size = New-Object System.Drawing.Size(780, 20)
+$lblCurrentQuery.Text = ""
+$form.Controls.Add($lblCurrentQuery)
+
+# Label: Progress Percentage
+$lblProgressPercent = New-Object System.Windows.Forms.Label
+$lblProgressPercent.Location = New-Object System.Drawing.Point(10, 620)
+$lblProgressPercent.Size = New-Object System.Drawing.Size(780, 20)
+$lblProgressPercent.Text = ""
+$form.Controls.Add($lblProgressPercent)
+
 # Run Logic (Button đã nằm ở GroupBox SQL - gọi chung biến $btnRun)
 $pyFile = Join-Path $PSScriptRoot "\run_queries.py"
 $btnRun.Add_Click({
@@ -438,10 +452,34 @@ $btnRun.Add_Click({
         return
     }
 
+    # Load mapping info to display DB name
+    $mapping = @{}
+    if (Test-Path $txtMap.Text) {
+        try {
+            $mapping = Get-Content $txtMap.Text | ConvertFrom-Json -ErrorAction Stop
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show("Warning: Cannot read mapping file for display.","Mapping Error",0,'Warning')
+        }
+    }
+
     $perFile = 100 / $selectedSQL.Count
     $idx = 1
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
     foreach ($sqlFile in $selectedSQL) {
+        $sqlName = [System.IO.Path]::GetFileName($sqlFile)
+        $dbPath = "Unknown"
+        
+        # Look up DB in mapping (mapping keys are usually filenames)
+        if ($mapping.PSObject.Properties[$sqlName]) {
+            $dbPath = $mapping.$sqlName
+        }
+        $dbName = [System.IO.Path]::GetFileName($dbPath)
+        
+        $lblCurrentQuery.Text = "Running: $sqlName - DB: $dbName"
+        $elapsed = $sw.Elapsed.TotalSeconds.ToString("F1")
+        $lblProgressPercent.Text = "Progress: $([math]::Min(100, [int](($idx-1) * $perFile)))% / 100% | Runtime: $elapsed second(s)"
+        $form.Refresh()
 
         $arg = "{0} ""{1}"" ""{2}"" ""{3}""" -f $pyFile, $sqlFile, $txtMap.Text, $txtOut.Text
 
@@ -459,8 +497,14 @@ $btnRun.Add_Click({
         }
 
         $progress.Value = [math]::Min(100, [int]($idx * $perFile))
+        $elapsed = $sw.Elapsed.TotalSeconds.ToString("F1")
+        $lblProgressPercent.Text = "Progress: $($progress.Value)% / 100% | Runtime: $elapsed second(s)"
+        $form.Refresh()
         $idx++
     }
+    $sw.Stop()
+    $totalTime = $sw.Elapsed.TotalSeconds.ToString("F1")
+    $lblCurrentQuery.Text = "Finished all queries in $totalTime second(s)."
     [System.Windows.Forms.MessageBox]::Show("All queries executed.","Done",0,'Information')
 })
 

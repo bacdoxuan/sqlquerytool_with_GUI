@@ -11,6 +11,10 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 - Bổ sung 2 nút filter nhanh cho danh sách SQL:
   - **Select 3G queries**: Chỉ chọn các file bắt đầu bằng `3G_`.
   - **Select 4G queries**: Chỉ chọn các file bắt đầu bằng `4G_`.
+- Cập nhật giao diện theo dõi tiến trình chạy (Progress Tracking):
+  - Hiển thị tên file SQL và Database tương ứng đang thực thi.
+  - Hiển thị tiến độ hoàn thành theo tỷ lệ `% / 100%`.
+  - Hiển thị thời gian chạy thực tế (Elapsed Time) bằng Stopwatch.
 - Tối ưu lại bố cục các nút chức năng trong GroupBox SQL Queries (sắp xếp theo cặp và căn chỉnh lề).
 - Cập nhật đồng bộ hiển thị phiên bản trên giao diện và Menu About.
 
