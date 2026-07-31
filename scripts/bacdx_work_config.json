@@ -1,10 +1,10 @@
 ﻿{
     "db_files":  [
-                     "D:\\Database\\2025_3G Cell HS USER TP_new.db3",
-                     "D:\\Database\\2025_3G Site traffic Utilization_new.db3",
-                     "D:\\Database\\2025_4G Cell User Throughput_new.db3",
-                     "D:\\Database\\2025_4G site traffic Utilization_new.db3",
-                     "D:\\Database\\2025_4G_VoLTE_traffic_new.db3"
+                     "C:\\Bac.DX\\SQLite\\DataBase\\2025_3G Cell HS USER TP_new.db3",
+                     "C:\\Bac.DX\\SQLite\\DataBase\\2025_3G Site traffic Utilization_new.db3",
+                     "C:\\Bac.DX\\SQLite\\DataBase\\2025_4G Cell User Throughput_new.db3",
+                     "C:\\Bac.DX\\SQLite\\DataBase\\2025_4G site traffic Utilization_new.db3",
+                     "C:\\Bac.DX\\SQLite\\DataBase\\2025_4G_VoLTE_traffic_new.db3"
                  ],
     "mapping_file":  "C:\\Bac.DX\\Python\\GIT\\sqlquerytool_with_GUI\\config\\sql_to_db_mapping_new.json",
     "sql_files":  [
@@ -40,5 +40,5 @@
                       "C:\\Bac.DX\\Python\\Daily_report\\4G_Utilization_Region.sql",
                       "C:\\Bac.DX\\Python\\Daily_report\\4G_Utilization_Zone.sql"
                   ],
-    "output_dir":  "C:\\Bac.DX\\Python\\Daily_report"
+    "output_dir":  "C:\\Bac.DX\\Python\\GIT\\sqlquerytool_with_GUI\\query_results"
 }
