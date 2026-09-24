@@ -8,7 +8,7 @@ LOG_FILE = os.path.join(LOG_DIR, "query_log.csv")
 start_time = time.time()
 
 # --- Argument Parsing ---
-# Script giờ sẽ nhận 3 tham số: file SQL, file mapping, và thư mục output.
+# Script nhận 3 tham số: file SQL, file mapping, và thư mục output.
 parser = argparse.ArgumentParser(description="Run a single SQL query against a mapped SQLite database.")
 parser.add_argument("sql_file", help="The absolute path to the .sql file to be executed.")
 parser.add_argument("mapping_file", help="The absolute path to the .json mapping file.")
@@ -47,13 +47,18 @@ except Exception as e:
     print(f"ERROR: Cannot read SQL file: {str(e)}", flush=True)
     sys.exit(1)
 
-# Thực hiện query trên database
+# Thực hiện query trên database với sqlite3 tối ưu hóa cấu hình PRAGMA cho OLAP
 try:
     conn = sqlite3.connect(db_file)
+    # Tối ưu hóa hiệu năng đọc OLAP
+    conn.execute("PRAGMA query_only = TRUE;")
+    conn.execute("PRAGMA cache_size = -128000;")       # Bộ nhớ đệm 128MB RAM
+    conn.execute("PRAGMA mmap_size = 10737418240;")     # Memory-Mapped I/O lên đến 10GB
+    conn.execute("PRAGMA temp_store = MEMORY;")        # Lưu bảng tạm sắp xếp trên RAM
     cursor = conn.cursor()
     cursor.execute(query)
     results = cursor.fetchall()
-    headers = [desc[0] for desc in cursor.description]
+    headers = [desc[0] for desc in cursor.description] if cursor.description else []
     conn.close()
     print("DEBUG: Query executed successfully.", flush=True)
 except Exception as e:

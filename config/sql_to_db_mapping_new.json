@@ -29,5 +29,35 @@
 	"3G_Site_config.sql": "D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
 	"4G_Site_config.sql": "D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
 	"3G_User_TP_Province.sql": "D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
-	"4G_User_TP_Province.sql": "D:\\DataBase\\2026_4G Cell User Throughput_new.db3"
+	"4G_User_TP_Province.sql": "D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_3G_Nation.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Province.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_RNC.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Site.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Zone.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_4G_Nation.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Province.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Site.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Zone.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+
+	"KPI_3G_Nation_avg_7days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Province_avg_7days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_RNC_avg_7days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Site_avg_7days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Zone_avg_7days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_4G_Nation_avg_7days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Province_avg_7days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Site_avg_7days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Zone_avg_7days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	
+	"KPI_3G_Nation_avg_30days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Province_avg_30days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_RNC_avg_30days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Site_avg_30days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_3G_Zone_avg_30days.sql":"D:\\DataBase\\2026_3G Cell HS USER TP_new.db3",
+	"KPI_4G_Nation_avg_30days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Province_avg_30days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Site_avg_30days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3",
+	"KPI_4G_Zone_avg_30days.sql":"D:\\DataBase\\2026_4G Cell User Throughput_new.db3"
+
 }
