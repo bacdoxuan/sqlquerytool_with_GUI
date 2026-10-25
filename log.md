@@ -32,6 +32,25 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 - Markdown/log files are word-wrapped with a vertical scrollbar; .sql
   files keep no-wrap with both scrollbars so long queries stay intact.
 
+### Analyze Log (analyze_log.py)
+- The chart is now drawn inside a fixed-size scrollable viewport instead
+  of squeezing every query into one window. With ~58 queries the bars
+  used to be only a few pixels tall and unreadable.
+- Row pitch and bar thickness are constant: the figure height depends on
+  the number of VISIBLE rows only, never on the number of queries.
+- Browse the whole list with the scrollbar under the charts, the mouse
+  wheel, or PageUp/PageDown/Home/End. The title shows
+  "Queries X-Y of N" so the current position is always clear.
+- The viewport adapts to the screen (rows = available height / pitch), so
+  the window always fits a 1366x768 laptop; it no longer runs off-screen.
+- Rows are indexed once and shared by both panels, so the latest-day and
+  all-time charts are always aligned row by row. A query that did not run
+  on the latest day keeps its row but draws no bar (previously the two
+  panels could be misaligned because they had different row sets).
+- Zebra row bands make it easy to follow one row across both panels, and
+  value labels are clipped so nothing spills while scrolling.
+- No scrollbar at all when every query fits in the viewport.
+
 ### Fixed (v1.6.0, patch)
 - The embedded SQL viewer could not be closed: Close / Copy threw
   "The variable '$v' cannot be retrieved because it has not been set",
