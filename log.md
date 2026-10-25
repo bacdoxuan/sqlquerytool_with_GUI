@@ -4,6 +4,45 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 
 ---
 
+## [v1.6.0] - 2026-10-25
+
+### New
+- Added an embedded SQL file viewer (no external editor needed):
+  - New menu "View > SQL File Content..." opens a read-only in-GUI window
+    that shows the selected .sql file in a monospace text box (Consolas,
+    with horizontal + vertical scrollbars).
+  - Double-clicking any item in the SQL list opens the same viewer.
+  - Right-clicking an item in the SQL list opens the same viewer too
+    (the row under the cursor is used, not a stale selection); a right
+    click on empty space does nothing.
+  - Viewer header shows the full path, line count, and file size; a
+    "Copy Content" button copies the file to the clipboard.
+- Selection logic: highlighted list item, else first checked item.
+- Bumped the GUI version label / About box to v1.6.0.
+
+### Change Logs menu
+- "Change Logs" now opens the real log.md content in the built-in
+  viewer instead of a MessageBox pointing at a file name.
+- The viewer was generalised into Show-TextViewer (used by both the SQL
+  list and the change log); Show-SqlViewer is kept as a thin wrapper.
+- Reads files with encoding detection: UTF-8 (with/without BOM),
+  UTF-16 LE/BE, and falls back to the system ANSI codepage, so legacy
+  Vietnamese .sql files no longer show garbled characters.
+- Markdown/log files are word-wrapped with a vertical scrollbar; .sql
+  files keep no-wrap with both scrollbars so long queries stay intact.
+
+### Fixed (v1.6.0, patch)
+- The embedded SQL viewer could not be closed: Close / Copy threw
+  "The variable '$v' cannot be retrieved because it has not been set",
+  so the window had to be escaped by killing the whole app.
+- Cause: the viewer was opened modeless (Show) while its event handlers
+  referenced local variables ($v, $content, $btnCopy), which were gone
+  once the function returned.
+- Fix: open the viewer with ShowDialog (modal) and make every handler
+  use $this (the sending control) plus the form Tag instead of locals.
+  Added: ESC closes the viewer, Ctrl+C copies, X button works, a single
+  viewer instance is reused, and the reference is released on FormClosed.
+
 ## [v1.5.1] – 2026-04-22
 
 ### Nâng cấp mới
