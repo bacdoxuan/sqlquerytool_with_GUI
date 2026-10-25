@@ -7,17 +7,18 @@ Dự án: PowerShell GUI + Python engine để truy vấn dữ liệu từ SQLit
 ## [v1.6.0] - 2026-10-25
 
 ### New
-- Added an embedded SQL file viewer (no external editor needed):
-  - New menu "View > SQL File Content..." opens a read-only in-GUI window
-    that shows the selected .sql file in a monospace text box (Consolas,
-    with horizontal + vertical scrollbars).
+- Embedded SQL file viewer (no external editor needed):
+  - "View SQL" button in the SQL Queries group, right next to the
+    "Selected: x / Total: y" counter (the button follows the label so it
+    always sits 8px after the text).
   - Double-clicking any item in the SQL list opens the same viewer.
   - Right-clicking an item in the SQL list opens the same viewer too
     (the row under the cursor is used, not a stale selection); a right
     click on empty space does nothing.
   - Viewer header shows the full path, line count, and file size; a
     "Copy Content" button copies the file to the clipboard.
-- Selection logic: highlighted list item, else first checked item.
+- Selection logic for the View SQL button: highlighted list item first,
+  else the first checked item.
 - Bumped the GUI version label / About box to v1.6.0.
 
 ### Change Logs menu

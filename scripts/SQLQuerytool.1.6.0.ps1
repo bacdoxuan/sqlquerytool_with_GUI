@@ -248,16 +248,6 @@ function Get-SqlSelection {
     return $null
 }
 
-# Men item "View SQL File Content..." -> viewer cho file SQL đang được chọn
-$viewSqlMenu = New-Object System.Windows.Forms.ToolStripMenuItem
-$viewSqlMenu.Text = "View"
-$viewSqlSubMenu = New-Object System.Windows.Forms.ToolStripMenuItem
-$viewSqlSubMenu.Text = "SQL File Content..."
-$viewSqlSubMenu.Add_Click({
-    Show-SqlViewer (Get-SqlSelection)
-})
-$viewSqlMenu.DropDownItems.Add($viewSqlSubMenu)
-$menuStrip.Items.Add($viewSqlMenu)
 
 # --- Menu About ---
 $aboutMenu = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -308,8 +298,26 @@ $form.Controls.Add($grpSQL)
 # Label: File Count
 $lblFileCount = New-Object System.Windows.Forms.Label
 $lblFileCount.Location = New-Object System.Drawing.Point(10, 25)
-$lblFileCount.Size = New-Object System.Drawing.Size(300, 20)
+$lblFileCount.AutoSize = $true
+$lblFileCount.Text = "Selected: 0 / Total: 0"
 $grpSQL.Controls.Add($lblFileCount)
+
+# Button: View SQL (sits right next to the "Selected: x / Total: y" label)
+# Prefers the highlighted row; falls back to the first checked item.
+$btnViewSQL = New-Object System.Windows.Forms.Button
+$btnViewSQL.Text = "View SQL"
+$btnViewSQL.Location = New-Object System.Drawing.Point(200, 22)
+$btnViewSQL.Size = New-Object System.Drawing.Size(95, 25)
+$btnViewSQL.Add_Click({
+    $target = $null
+    if ($sqlList.SelectedIndex -ge 0) {
+        $target = $sqlList.Items[$sqlList.SelectedIndex]
+    } elseif ($sqlList.CheckedItems.Count -gt 0) {
+        $target = $sqlList.CheckedItems[0]
+    }
+    Show-SqlViewer $target
+})
+$grpSQL.Controls.Add($btnViewSQL)
 
 # CheckedListBox: SQL List
 $sqlList = New-Object System.Windows.Forms.CheckedListBox
@@ -419,11 +427,18 @@ $btnRun.Location = New-Object System.Drawing.Point(620, 205)
 $btnRun.Size = New-Object System.Drawing.Size(140, 30)
 $grpSQL.Controls.Add($btnRun)
 
+# Value-change watcher for the SQL list (keeps label + View SQL button in sync)
+
 # Function: Update file count
 function UpdateFileCount {
     $selected = $sqlList.CheckedItems.Count
     $total = $sqlList.Items.Count
     $lblFileCount.Text = "Selected: $selected / Total: $total"
+    # Keep the View SQL button right next to the label, whatever the count width is
+    if ($btnViewSQL) {
+        $btnViewSQL.Left = $lblFileCount.Right + 8
+        $btnViewSQL.Top = $lblFileCount.Top
+    }
 }
 $sqlList.Add_SelectedIndexChanged({ Start-Sleep -Milliseconds 50; UpdateFileCount })
 # Double-click into a SQL list item -> open the content viewer right in the GUI
